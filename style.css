@@ -2,12 +2,45 @@ body {
     font-family: Arial, sans-serif;
 }
 
-#bucketLists div {
-    margin-bottom: 20px;
+#bucketForm {
+    width: 350px;
+    display: flex;
+    justify-content: space-between;
 }
-#bucketLists .labelstatus{
-    display:block;
-    margin-top: 15px;
+
+#bucketLists {
+        width: 350px;
+
+    .listWrapper {
+        display: flex;
+        justify-content: flex-start;
+        text-align: start;
+    }
+
+    .content-wrapper {
+        display: flex;
+        align-items: center;
+        /* Vertikal centrering */
+        gap: 5px;
+        /* Mellanrum mellan checkbox och text */
+    }
+
+    .category {
+        font-weight: 400;
+    }
+
+    .labelstatus {
+        display: block;
+        font-weight: 600;
+        text-align: start;
+        font-size: small;
+    }
+
+    .buttonWrapper{
+        width: 370px;
+        display: flex;
+        justify-content: flex-end;
+    }
 }
 
 ul {
@@ -16,17 +49,23 @@ ul {
     padding: 0;
 }
 
-li {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    padding: 5px 10px;
-}
-label{
-    padding: 5px;
+h4 {
+    margin-block-end: .2em;
 }
 
+li {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    text-align: start;
+    padding: 5px 10px;
+}
 
 button {
     margin-left: 10px;
+    height: fit-content;
+}
+
+.bold {
+    font-weight: 600;
 }
