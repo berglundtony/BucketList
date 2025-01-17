@@ -106,10 +106,13 @@ function createStatusCheckbox(item) {
 }
 
 // Gör ett eventListener på change status
-function changeStatusCheckboxEvent(statusCheckbox, index) {
+function changeStatusCheckboxEvent(statusCheckbox, labelActivityName, index) {
     statusCheckbox.addEventListener('change', (event) => {
         console.log(event);
         activities[index].status = event.target.checked;
+        activities[index].status == true ?
+            labelActivityName.setAttribute('class', 'activityDone') :
+            labelActivityName.setAttribute('class', 'activityName');
         setLocalStorageItems(activities);
     });
 }
@@ -117,15 +120,21 @@ function changeStatusCheckboxEvent(statusCheckbox, index) {
 // Skapa etikett för activtyName
 function createLabelOfActivityName(item) {
     const label = document.createElement('label');
+   
+    label.setAttribute('class', 'activityName')
+    if (item.status === true) {
+        label.setAttribute('class', 'activityDone')
+    }
     label.textContent = `${item.name}`;
     return label;
 }
 
 // Skapa en contentWrapper
-function createContentWrapper(labelActivityName, labelStatus) {
+function createContentWrapper(labelActivityName, labelStatus, statusCheckbox) {
     const contentWrapper = document.createElement('div');
     contentWrapper.className = 'content-wrapper';
     contentWrapper.appendChild(labelStatus);
+    contentWrapper.appendChild(statusCheckbox);
     contentWrapper.appendChild(labelActivityName);
     return contentWrapper;
 }
@@ -162,11 +171,10 @@ function iterationOfActivities(ul, printedCategories) {
         createOneCategoryOfEach(printedCategories, item, ul);
         const labelStatus = createLabelStatus();
         const statusCheckbox = createStatusCheckbox(item);
-        changeStatusCheckboxEvent(statusCheckbox, index);
         const labelActivityName = createLabelOfActivityName(item);
+        changeStatusCheckboxEvent(statusCheckbox, labelActivityName, index);
         const contentWrapper = createContentWrapper(labelActivityName, labelStatus, statusCheckbox);
         const deleteButton = createDeleteButton(index);
-        contentWrapper.appendChild(statusCheckbox);
         createLiTagAndTheBlongingChildren(ul, contentWrapper, deleteButton);
     });
 }

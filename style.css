@@ -35,6 +35,9 @@ body {
         text-align: start;
         font-size: small;
     }
+    .activityDone{
+        text-decoration: line-through;
+    }
 
     .buttonWrapper{
         width: 370px;
