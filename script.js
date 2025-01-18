@@ -38,6 +38,7 @@ function createBucketListWithChildren(ul, buttonWrapper) {
     theBucketList.appendChild(ul);
     theBucketList.appendChild(buttonWrapper);
 }
+
 // Skapa en wrapper för clearButton
 function createClearButtonWrapper(clearButton) {
     const buttonWrapper = document.createElement('div');
@@ -45,6 +46,7 @@ function createClearButtonWrapper(clearButton) {
     buttonWrapper.appendChild(clearButton);
     return buttonWrapper;
 }
+
 // Skapa en knapp för att radera aktiviteterna i listan
 function createClearButtonAndClickEvent() {
     const clearbtn = document.createElement('button');
@@ -53,6 +55,7 @@ function createClearButtonAndClickEvent() {
     clearbtn.addEventListener('click', () => clearBucketList());
     return clearbtn;
 }
+
 // Ta bort alla aktiviteterna i listan
 function clearBucketList() {
     const bucketLists = document.getElementById("bucketLists");
@@ -81,33 +84,24 @@ function createOneCategoryOfEach(printedCategories, item, ul) {
     if (!printedCategories.has(item.category)) {
         printedCategories.add(item.category);
         // Skapa en rubrik för kategorin
-        const categoryHeader = document.createElement('h4');
+        const categoryHeader = document.createElement('h3');
         categoryHeader.textContent = `${item.category}`
         ul.appendChild(categoryHeader);
     }
 }
 
 // Skapa en label för status
-function createLabelStatus() {
+function createLabelStatus(item) {
     const lblStatus = document.createElement('label');
     lblStatus.setAttribute('class', 'toggle');
     return lblStatus
 }
-// Label ovanför checkboxen ändrar text vid knapp trycknigns event
-function toggleEventListener(toggles) {
-    toggles.forEach(toggle => {
-        toggle.addEventListener('click', () => {
-            const onOff = toggle.parentNode.querySelector('.onOff');
-            onOff.textContent = toggle.checked ? 'Klar' : 'Status';
-        });
-    })
-}
 
 // Skapa ett span element för checkboxToggle
-function createSpanOffForCheckbox() {
+function createSpanOffForCheckbox(item) {
     const span = document.createElement('span');
     span.setAttribute('class', 'onOff')
-    span.textContent = 'Status';
+    span.textContent = item.status ? 'Klar' : 'Status';
     return span;
 }
 // Skapa ytterligare ett span element för checkboxToggle
@@ -118,7 +112,7 @@ function createSpanSlider() {
 }
 
 // Skapa en checkbox för status
-function createStatusCheckbox(item, index) {
+function createStatusCheckbox(item) {
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
     checkbox.checked = item.status;
@@ -127,10 +121,20 @@ function createStatusCheckbox(item, index) {
     return checkbox;
 }
 
+function createStatusElements(item) {
+    const labelStatus = createLabelStatus();
+    const spanOnOff = createSpanOffForCheckbox(item);
+    const statusCheckbox = createStatusCheckbox(item);
+    const spanSlider = createSpanSlider();
+    labelStatus.appendChild(spanOnOff);
+    labelStatus.appendChild(statusCheckbox);
+    labelStatus.appendChild(spanSlider);
+    return { labelStatus, statusCheckbox };
+}
+
 // Gör ett eventListener på change status
 function changeStatusCheckboxEvent(statusCheckbox, labelActivityName, index) {
     statusCheckbox.addEventListener('change', (event) => {
-        // const onOff = document.getElementsByClassName('onOff');
         const onOff = statusCheckbox.parentNode.querySelector('.onOff');
         onOff.style.color = 'black;'
         onOff.textContent = statusCheckbox.checked ? 'Klar' : 'Status';
@@ -196,13 +200,7 @@ function iterationOfActivities(ul, printedCategories) {
     activities.forEach((item, index) => {
         console.log(`${index + 1}: ${item.name} (${item.category})`);
         createOneCategoryOfEach(printedCategories, item, ul);
-        const labelStatus = createLabelStatus();
-        const spanOnOff = createSpanOffForCheckbox();
-        const statusCheckbox = createStatusCheckbox(item, index);
-        const spanSlider = createSpanSlider();
-        labelStatus.appendChild(spanOnOff);
-        labelStatus.appendChild(statusCheckbox);
-        labelStatus.appendChild(spanSlider);
+        const { labelStatus, statusCheckbox } = createStatusElements(item);
         const labelActivityName = createLabelOfActivityName(item);
         changeStatusCheckboxEvent(statusCheckbox, labelActivityName, index);
         const contentWrapper = createContentWrapper(labelActivityName, labelStatus);
