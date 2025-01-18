@@ -32,7 +32,7 @@ function createBucketListForm() {
     });
 }
 // Skapa element Bucketlist med tillhörande barnelement
-function createBucketListAWithChildren(ul, buttonWrapper) {
+function createBucketListWithChildren(ul, buttonWrapper) {
     const theBucketList = document.getElementById('bucketLists');
     theBucketList.innerHTML = "";
     theBucketList.appendChild(ul);
@@ -45,20 +45,24 @@ function createClearButtonWrapper(clearButton) {
     buttonWrapper.appendChild(clearButton);
     return buttonWrapper;
 }
-// Skapa en knapp för att radera aktiviteterna ilistan
-function createClearButton() {
+// Skapa en knapp för att radera aktiviteterna i listan
+function createClearButtonAndClickEvent() {
     const clearbtn = document.createElement('button');
-    clearbtn.textContent = 'Radera lista';
-    clearbtn.setAttribute('id', 'clearbutton')
+    clearbtn.textContent = 'Radera aktiviteter';
+    clearbtn.setAttribute('id', 'clearbutton');
+    clearbtn.addEventListener('click', () => clearBucketList());
     return clearbtn;
 }
 // Ta bort alla aktiviteterna i listan
 function clearBucketList() {
     const bucketLists = document.getElementById("bucketLists");
-    bucketLists.innerHTML = "";
-    activities = [];
-    setLocalStorageItems(activities);
-    console.log("Listan har rensats!");
+    const choice = confirm("Är det säkert att du vill radera alla aktiviteterna?");
+    if (choice) {
+        bucketLists.innerHTML = "";
+        activities = [];
+        setLocalStorageItems(activities);
+        console.log("Listan har rensats!");
+    }
 }
 
 // Sortera aktiviteter på kategori i första hand och i kategorin på aktivitetsnamnet.
@@ -78,37 +82,58 @@ function createOneCategoryOfEach(printedCategories, item, ul) {
         printedCategories.add(item.category);
         // Skapa en rubrik för kategorin
         const categoryHeader = document.createElement('h4');
-        const span = document.createElement('span');
-        categoryHeader.textContent = `Kategori: `;
-        span.setAttribute('class', 'category');
-        span.textContent = `${item.category}`
+        categoryHeader.textContent = `${item.category}`
         ul.appendChild(categoryHeader);
-        categoryHeader.appendChild(span)
     }
 }
 
 // Skapa en label för status
 function createLabelStatus() {
-    const labelStatus = document.createElement('label');
-    labelStatus.setAttribute('class', 'labelstatus');
-    labelStatus.textContent = 'Status:';
-    return labelStatus;
+    const lblStatus = document.createElement('label');
+    lblStatus.setAttribute('class', 'toggle');
+    return lblStatus
+}
+// Label ovanför checkboxen ändrar text vid knapp trycknigns event
+function toggleEventListener(toggles) {
+    toggles.forEach(toggle => {
+        toggle.addEventListener('click', () => {
+            const onOff = toggle.parentNode.querySelector('.onOff');
+            onOff.textContent = toggle.checked ? 'Klar' : 'Status';
+        });
+    })
+}
+
+// Skapa ett span element för checkboxToggle
+function createSpanOffForCheckbox() {
+    const span = document.createElement('span');
+    span.setAttribute('class', 'onOff')
+    span.textContent = 'Status';
+    return span;
+}
+// Skapa ytterligare ett span element för checkboxToggle
+function createSpanSlider() {
+    const spanSld = document.createElement('span');
+    spanSld.setAttribute('class', 'slider round');
+    return spanSld
 }
 
 // Skapa en checkbox för status
-function createStatusCheckbox(item) {
+function createStatusCheckbox(item, index) {
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
     checkbox.checked = item.status;
-    checkbox.setAttribute('Id', 'status');
-    checkbox.setAttribute('name', 'status');
+    checkbox.setAttribute('Id', `status`);
+    checkbox.setAttribute('name', `status`);
     return checkbox;
 }
 
 // Gör ett eventListener på change status
 function changeStatusCheckboxEvent(statusCheckbox, labelActivityName, index) {
     statusCheckbox.addEventListener('change', (event) => {
-        console.log(event);
+        // const onOff = document.getElementsByClassName('onOff');
+        const onOff = statusCheckbox.parentNode.querySelector('.onOff');
+        onOff.style.color = 'black;'
+        onOff.textContent = statusCheckbox.checked ? 'Klar' : 'Status';
         activities[index].status = event.target.checked;
         activities[index].status == true ?
             labelActivityName.setAttribute('class', 'activityDone') :
@@ -120,7 +145,6 @@ function changeStatusCheckboxEvent(statusCheckbox, labelActivityName, index) {
 // Skapa etikett för activtyName
 function createLabelOfActivityName(item) {
     const label = document.createElement('label');
-   
     label.setAttribute('class', 'activityName')
     if (item.status === true) {
         label.setAttribute('class', 'activityDone')
@@ -130,28 +154,31 @@ function createLabelOfActivityName(item) {
 }
 
 // Skapa en contentWrapper
-function createContentWrapper(labelActivityName, labelStatus, statusCheckbox) {
+function createContentWrapper(labelActivityName, labelStatus) {
     const contentWrapper = document.createElement('div');
     contentWrapper.className = 'content-wrapper';
     contentWrapper.appendChild(labelStatus);
-    contentWrapper.appendChild(statusCheckbox);
     contentWrapper.appendChild(labelActivityName);
     return contentWrapper;
 }
 
-// Skapa delete knappen
+// Skapa delete knappen för att ta bort ett list item
 function createDeleteButton(index) {
     const button = document.createElement('button');
     button.type = 'button'
     button.textContent = 'X'
+    button.setAttribute('class', 'delete')
     button.addEventListener('click', () => deleteItem(index));
     return button;
 }
 
 // Ta bort en aktivitet
 function deleteItem(index) {
-    activities.splice(index, 1);
-    setLocalStorageItems(activities);
+    const choice = confirm('Vill du ta bort denna aktivitet?');
+    if (choice) {
+        activities.splice(index, 1);
+        setLocalStorageItems(activities);
+    }
     renderBucketList();
 }
 
@@ -170,10 +197,15 @@ function iterationOfActivities(ul, printedCategories) {
         console.log(`${index + 1}: ${item.name} (${item.category})`);
         createOneCategoryOfEach(printedCategories, item, ul);
         const labelStatus = createLabelStatus();
-        const statusCheckbox = createStatusCheckbox(item);
+        const spanOnOff = createSpanOffForCheckbox();
+        const statusCheckbox = createStatusCheckbox(item, index);
+        const spanSlider = createSpanSlider();
+        labelStatus.appendChild(spanOnOff);
+        labelStatus.appendChild(statusCheckbox);
+        labelStatus.appendChild(spanSlider);
         const labelActivityName = createLabelOfActivityName(item);
         changeStatusCheckboxEvent(statusCheckbox, labelActivityName, index);
-        const contentWrapper = createContentWrapper(labelActivityName, labelStatus, statusCheckbox);
+        const contentWrapper = createContentWrapper(labelActivityName, labelStatus);
         const deleteButton = createDeleteButton(index);
         createLiTagAndTheBlongingChildren(ul, contentWrapper, deleteButton);
     });
@@ -185,10 +217,9 @@ function renderBucketList() {
     activities = getLocalStorageItems();
     sortActivities(activities);
     const ul = document.createElement('ul');
-    const clearButton = createClearButton();
-    clearButton.addEventListener('click', () => clearBucketList());
+    const clearButton = createClearButtonAndClickEvent();
     const buttonWrapper = createClearButtonWrapper(clearButton);
-    createBucketListAWithChildren(ul,buttonWrapper);
+    createBucketListWithChildren(ul,buttonWrapper);
     iterationOfActivities(ul, printedCategories);
 };
 

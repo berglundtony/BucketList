@@ -1,15 +1,18 @@
 body {
     font-family: Arial, sans-serif;
+    background-color: rgb(224, 245, 216);
+    margin: 25px;
 }
 
 #bucketForm {
-    width: 350px;
+    width: 550px;
     display: flex;
     justify-content: space-between;
+    margin-bottom: 2em;
 }
 
 #bucketLists {
-        width: 350px;
+    width: 550px;
 
     .listWrapper {
         display: flex;
@@ -19,14 +22,70 @@ body {
 
     .content-wrapper {
         display: flex;
-        align-items: center;
-        /* Vertikal centrering */
+        align-items: end;
         gap: 5px;
-        /* Mellanrum mellan checkbox och text */
     }
 
     .category {
         font-weight: 400;
+    }
+
+    .toggle {
+        position: relative;
+
+        input {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        input:checked+.slider {
+            background-color: green;
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(12px);
+        }
+
+        .slider.round {
+            border-radius: 12px;
+        }
+
+        .slider.round::before {
+            border-radius: 8px;
+        }
+
+        .slider {
+            position: relative;
+            display: block;
+            cursor: pointer;
+            background-color: black;
+            transition: 0.4s;
+            width: 35px;
+            height: 20px;
+        }
+
+        .slider:before {
+            content: "";
+            position: absolute;
+            height: 16px;
+            width: 18px;
+            background-color: white;
+            transition: 0.4s;
+            top: 2px;
+            left: 3px;
+        }
+    }
+
+    .toggle .onOff {
+        color: black;
+        font-size: small;
+        font-weight: 600;
+        line-height: 1.2em;
+        text-align: center;
+        display: block;
+        margin-bottom: 1px;
     }
 
     .labelstatus {
@@ -35,12 +94,15 @@ body {
         text-align: start;
         font-size: small;
     }
-    .activityDone{
+
+    .activityDone {
         text-decoration: line-through;
+        color: green;
     }
 
-    .buttonWrapper{
-        width: 370px;
+    .buttonWrapper {
+        margin-top: 2em;
+        width: 540px;
         display: flex;
         justify-content: flex-end;
     }
@@ -50,6 +112,10 @@ ul {
     list-style-type: none;
     margin-block-start: 0;
     padding: 0;
+
+    h4 {
+        margin: 1em 0 .3em .8em;
+    }
 }
 
 h4 {
@@ -59,16 +125,83 @@ h4 {
 li {
     display: flex;
     justify-content: space-between;
-    align-items: start;
-    text-align: start;
+    align-items: end;
     padding: 5px 10px;
 }
 
 button {
-    margin-left: 10px;
-    height: fit-content;
+    background-color: rgb(156, 177, 156);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 8px;
+    height: 1.8em;
+    border-radius: 8px;
+    padding: 19px;
+    text-align: center;
+    line-height: 1.4em;
+    font-size: medium;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.4s ease;
 }
 
-.bold {
-    font-weight: 600;
+button:hover {
+    background-color: red;
+    border: 2px solid rgb(1, 12, 1);
+    transition: background-color 0.6s ease;
+
+}
+
+button.delete {
+    padding: 12px 8px;
+    color: red;
+    font-weight: 800;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    cursor: pointer;
+}
+
+button.delete:hover {
+    background-color: red;
+    color: black;
+    transition: background-color 0.8s ease;
+}
+
+button.add {
+    width: 20%;
+    color:black;
+    transition: color 0.2s ease;
+}
+
+button.add:hover {
+    color: white;
+    background-color: green;
+    transition: background-color 0.8s ease;
+    transition: color 0.2s ease;
+}
+
+input[type="text"],
+#activityCategory {
+    border: 2px solid rgb(4, 66, 4);
+    line-height: 1.2em;
+    font-size: medium;
+    font-family: Arial, Helvetica, sans-serif;
+    color: black;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+input[type="text"] {
+    width: 50%;
+}
+
+input::placeholder {
+    color: black;
+    font-style: italic;
+}
+
+#activityCategory {
+    width: 30%;
+    margin-left: 5px;
 }
