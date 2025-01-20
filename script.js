@@ -63,7 +63,8 @@ function clearBucketList() {
     if (choice) {
         bucketLists.innerHTML = "";
         activities = [];
-        setLocalStorageItems(activities);
+        localStorage.clear();
+        // setLocalStorageItems(activities);
         console.log("Listan har rensats!");
     }
 }
@@ -165,6 +166,40 @@ function createContentWrapper(labelActivityName, labelStatus) {
     contentWrapper.appendChild(labelActivityName);
     return contentWrapper;
 }
+// Skapa update knappen för att uppdatera en aktivitet
+function createUpdateButtonAndEvent(index, item) {
+    const button = document.createElement('button');
+    button.type = 'button'
+    button.textContent = 'Update'
+    button.setAttribute('class', 'update')
+    // button.addEventListener('click', () => updateItem(index, item));
+    return button;
+}
+
+// Updatera en aktivitet
+// function updateItem(index, item) {
+//     const updateInput = document.createElement('input');
+//     updateInput
+
+//     if (index !== -1) {
+//         {
+//             name: item.name,
+//                 category: item.category,
+//                     status: item.Status,
+
+
+//         }
+//         };
+//     }
+
+//     activities.splice(index, 1, {
+//         name: item.name.trim(),
+//         category: item.category,
+//         status: item.status
+//     });
+//         setLocalStorageItems(activities);
+//     renderBucketList();
+// }
 
 // Skapa delete knappen för att ta bort ett list item
 function createDeleteButton(index) {
@@ -203,6 +238,7 @@ function iterationOfActivities(ul, printedCategories) {
         const { labelStatus, statusCheckbox } = createStatusElements(item);
         const labelActivityName = createLabelOfActivityName(item);
         changeStatusCheckboxEvent(statusCheckbox, labelActivityName, index);
+        createUpdateButtonAndEvent(index, item);
         const contentWrapper = createContentWrapper(labelActivityName, labelStatus);
         const deleteButton = createDeleteButton(index);
         createLiTagAndTheBlongingChildren(ul, contentWrapper, deleteButton);
